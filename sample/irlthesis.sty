@@ -1,0 +1,186 @@
+% =============================================================================
+% irlthesis.sty
+% 埼玉大学 教育学部 情報・ロボット研究室 卒業論文スタイル
+%
+% 個人版（main.tex）と研究室の論文集（collection/main.tex）の両方が読み込む．
+% 学生は編集しない．パッケージや命令を追加するときは preamble.tex に書く．
+% =============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{irlthesis}[2026/10/30 v1.0 IRLab undergraduate thesis style]
+
+% -----------------------------------------------------------------------------
+% パッケージ
+% -----------------------------------------------------------------------------
+\RequirePackage{luatexja-preset}   % 和文フォント
+\RequirePackage[top=25truemm, bottom=20truemm, left=25truemm, right=25truemm]{geometry}
+\RequirePackage{amsmath, amssymb, bm}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc}
+\RequirePackage{subcaption}        % 図の横並び（subfigure 環境）
+\RequirePackage{float}
+\RequirePackage{booktabs, tabularx, multirow, diagbox}
+\RequirePackage{siunitx}           % 単位付きの数値（\SI{10}{mm} など）
+\RequirePackage{url}
+\RequirePackage{listings}          % ソースコード
+
+% 参考文献（biblatex + biber）
+\RequirePackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  maxnames=99,
+  minnames=99,
+]{biblatex}
+
+% ハイパーリンク（最後に読み込む）
+\RequirePackage[unicode, bookmarks=true, hypertexnames=false, hidelinks]{hyperref}
+\pdfstringdefDisableCommands{\def\\{}}   % 題目の改行を PDF のしおりから除く
+
+% -----------------------------------------------------------------------------
+% 体裁
+% -----------------------------------------------------------------------------
+\setcounter{tocdepth}{1}           % 目次は節まで
+\renewcommand{\figurename}{Fig. }
+\renewcommand{\tablename}{Table }
+\renewcommand{\lstlistingname}{Listing}
+\renewcommand{\figureautorefname}{Fig.}
+\renewcommand{\tableautorefname}{Table}
+
+% ソースコードの書式
+\definecolor{myComment}{rgb}{0.0, 0.6, 0.0}
+\definecolor{myKeyWord}{cmyk}{1.0, 0.0, 0.0, 0.3}
+\definecolor{myString}{cmyk}{0.0, 1.0, 0.0, 0.0}
+\lstdefinestyle{customText}{
+  backgroundcolor  = {\color{white}},
+  basicstyle       = {\footnotesize\ttfamily},
+  breaklines       = {true},
+  columns          = {flexible},   % 和文を1字ずつ桁に割り付けない
+  keepspaces       = {true},       % flexible でもインデントを保つ
+  commentstyle     = {\itshape\color{myComment}},
+  frame            = {shadowbox},
+  framesep         = {4pt},
+  keywordstyle     = {\bfseries\color{myKeyWord}},
+  lineskip         = {-0.5ex},
+  numbers          = {left},
+  numberstyle      = {\footnotesize},
+  numbersep        = {1\zw},
+  showstringspaces = {false},
+  stringstyle      = {\color{myString}},
+  tabsize          = {2},
+  xleftmargin      = {2\zw},
+  xrightmargin     = {2\zw},
+}
+\lstdefinestyle{customPython}{language = {Python}, style = {customText}}
+\lstdefinestyle{customC}{language = {C}, style = {customText}}
+\lstset{style = {customText}}
+
+% \includeCode[言語]{ファイル}{キャプション}
+%   例：\includeCode[Python]{src/main.py}{計測プログラム}
+%   ラベルは src:キャプション になる（過去の論文との互換のため）
+\newcommand{\includeCode}[3][C]{%
+  \lstinputlisting[caption = {#3}, label = {src:#3}, style = custom#1]{#2}}
+
+% -----------------------------------------------------------------------------
+% 論文の情報（meta.tex で設定する）
+% -----------------------------------------------------------------------------
+\newcommand{\thesisyear}[1]{\def\IRL@year{#1}}
+\newcommand{\thesistitle}[1]{\def\IRL@title{#1}}
+\newcommand{\thesistitleen}[1]{\def\IRL@titleen{#1}}
+\newcommand{\thesisauthor}[1]{\def\IRL@author{#1}}
+\newcommand{\thesisauthoren}[1]{\def\IRL@authoren{#1}}
+\newcommand{\thesissupervisor}[2]{\def\IRL@supervisor{#1}\def\IRL@supervisoren{#2}}
+\newcommand{\thesisdate}[1]{\def\IRL@date{#1}}
+
+% 所属（表紙の課程・コース・専修・分野）
+%   \thesiscourse{中学校} または \thesiscourse{小学校}
+\@namedef{IRL@course@中学校}{%
+  \def\IRL@courseja{学校教育教員養成課程\\ 中学校コース\\ 生活創造専修・技術分野}%
+  \def\IRL@courseen{School education teacher training course\\
+    Junior High School Course\\
+    Life Creation Specialization / Technical Field}}
+\@namedef{IRL@course@小学校}{%
+  \def\IRL@courseja{学校教育教員養成課程\\ 小学校コース\\ 生活創造専修・ものづくりと情報分野}%
+  \def\IRL@courseen{School education teacher training course\\
+    Elementary School Course\\
+    Life Creation Specialization / Manufacturing and Information Field}}
+\newcommand{\thesiscourse}[1]{%
+  \@ifundefined{IRL@course@#1}%
+    {\PackageError{irlthesis}%
+      {\string\thesiscourse{#1} は使えない}%
+      {\string\thesiscourse{中学校} または \string\thesiscourse{小学校} と書く}}%
+    {\@nameuse{IRL@course@#1}}}
+
+% 既定値．論文集では学生ごとにここへ戻してから meta.tex を読む
+\newcommand{\IRLresetmeta}{%
+  \thesiscourse{中学校}%
+  \thesisyear{}%
+  \thesistitle{}%
+  \thesistitleen{}%
+  \thesisauthor{}%
+  \thesisauthoren{}%
+  \thesissupervisor{井上一道}{Kazumichi INOUE}%
+  \thesisdate{\today}}
+\IRLresetmeta
+
+\newcommand{\IRLthesistitle}{\IRL@title}
+\newcommand{\IRLthesisauthor}{\IRL@author}
+
+% -----------------------------------------------------------------------------
+% 表紙
+% -----------------------------------------------------------------------------
+\newcommand{\IRL@signbox}{%
+  \begin{tikzpicture}
+    \draw (0,0) rectangle (2.5,3);
+    \draw (2.5,0) rectangle (5,3); \draw (3.75,2.7) node{指導教員};
+    \draw (0,2.4) -- (5,2.4);
+  \end{tikzpicture}}
+
+\newcommand{\makethesistitle}{%
+  \hypersetup{pdftitle = {\IRL@title}, pdfauthor = {\IRL@author}}%
+  \begin{titlepage}
+    \begin{center}
+      {\Large 埼玉大学 教育学部\\ \IRL@year\ 卒業論文\par}
+      \vspace{3\zw}
+      {\Huge \IRL@title\par}
+      \vspace{2\zw}
+      {\Large \IRL@titleen\par}
+      \vspace{4\zw}
+      {\Large \IRL@author\par}
+      \vspace{1\zw}
+      {\Large \IRL@authoren\par}
+      \vspace{4\zw}
+      {\large \IRL@courseja\\ \IRL@courseen\par}
+      \vspace{4\zw}
+      {\large 指導教員 \IRL@supervisor\\ Supervisor: \IRL@supervisoren\par}
+    \end{center}
+    \vfill
+    \begin{flushright}
+      \IRL@signbox\par
+      \vspace{1\zw}
+      提出日 \IRL@date
+    \end{flushright}
+  \end{titlepage}}
+
+% -----------------------------------------------------------------------------
+% 要旨・謝辞・参考文献
+% -----------------------------------------------------------------------------
+% \begin{thesisabstract}{見出し} ... \end{thesisabstract}
+\newenvironment{thesisabstract}[1]{%
+  \clearpage
+  \thispagestyle{plain}%
+  \markboth{#1}{}%
+  {\large\centering #1\par}%
+  \vspace{\baselineskip}}{\par}
+
+% 番号なしの章（目次に載せる）
+\newcommand{\thesisunnumberedchapter}[1]{%
+  \chapter*{#1}%
+  \addcontentsline{toc}{chapter}{#1}%
+  \markboth{#1}{}}
+
+\newcommand{\printthesisbibliography}{%
+  \printbibliography[heading = bibintoc, title = {参考文献}]}
+
+\endinput

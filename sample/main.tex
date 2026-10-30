@@ -1,0 +1,49 @@
+% !TeX program = lualatex
+% =============================================================================
+% 卒業論文（個人版）のメインファイル
+%
+% このファイルは編集しない．書く場所は次のとおり．
+%   題目・氏名        → meta.tex
+%   Abstract・要旨    → abstract_en.tex，abstract_ja.tex
+%   本文              → chapters/ 以下（章の並びは chapters.tex）
+%   謝辞              → acknowledgments.tex
+%   付録              → appendix.tex
+%   参考文献          → references.bib
+%   パッケージの追加  → preamble.tex
+%
+% 研究室の論文集は，このファイルを使わずに上のファイルを直接取り込む．
+% そのため，このファイルに本文や設定を書き足すと，論文集に反映されない．
+% =============================================================================
+\documentclass[a4paper, oneside, fleqn]{ltjsbook}
+\usepackage{irlthesis}
+\input{preamble}
+\input{meta}
+\addbibresource{references.bib}
+
+\begin{document}
+
+\makethesistitle
+
+\frontmatter
+\begin{thesisabstract}{Abstract}
+  \input{abstract_en}
+\end{thesisabstract}
+\begin{thesisabstract}{要旨}
+  \input{abstract_ja}
+\end{thesisabstract}
+\tableofcontents
+\listoffigures
+\listoftables
+
+\mainmatter
+\input{chapters}
+
+\thesisunnumberedchapter{謝辞}
+\input{acknowledgments}
+
+\appendix
+\input{appendix}
+
+\printthesisbibliography
+
+\end{document}

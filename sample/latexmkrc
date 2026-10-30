@@ -1,0 +1,13 @@
+# 記入例の latexmk の設定（編集しない）
+# 生成物はすべて build/ に出る．PDF は build/main.pdf．
+
+@default_files = ('main.tex');
+$pdf_mode = 4;    # LuaLaTeX で PDF を作る
+$lualatex = 'lualatex -synctex=1 -interaction=nonstopmode -file-line-error %O %S';
+$out_dir = 'build';
+
+# main.tex と irlthesis.sty は，親フォルダ（雛形）のものをコンパイルのたびに複製する
+use File::Copy;
+for my $f ('main.tex', 'irlthesis.sty') {
+    copy("../$f", $f) if -e "../$f";
+}
