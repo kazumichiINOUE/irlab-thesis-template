@@ -4,7 +4,7 @@
 同じファイルは，研究室の卒業論文集にもそのまま取り込まれる．
 そのため，ファイルの役割と「書き方の規則」を守る．
 
-- 執筆の手順（ダウンロード，VS Code と Claude の使い方，提出）は [GUIDE.md](GUIDE.md) にある．
+- 執筆の手順（ダウンロード，VS Code と Claude の使い方，提出）は [GUIDE.md](GUIDE.md) にある．同じ内容の PDF は [GUIDE.pdf](GUIDE.pdf)．
 - 記入例は [sample/](sample/) にある．仕上がりは [sample/sample.pdf](sample/sample.pdf)．
 - 雛形一式のダウンロード：<https://github.com/kazumichiINOUE/irlab-thesis-template/archive/refs/heads/main.zip>
 
@@ -65,7 +65,8 @@ latexmk -C    # PDF も含めて生成物を消す
 | `irlthesis.sty` | 研究室共通のスタイル | しない | 研究室の正本を使う |
 | `latexmkrc`，`.vscode/` | コンパイルの設定 | しない | |
 | `tools/check.py` | 形式のチェック | しない | |
-| `GUIDE.md` | 執筆の手順 | しない | |
+| `GUIDE.md`，`GUIDE.pdf` | 執筆の手順 | しない | |
+| `tools/make_guide_pdf.sh` | `GUIDE.pdf` を作る（教員用） | しない | |
 | `sample/` | 記入例（ダミーの本文） | しない | 使わない |
 
 個人版の並びは，表紙，Abstract，要旨，目次（図目次・表目次），本文，謝辞，付録，参考文献である．
