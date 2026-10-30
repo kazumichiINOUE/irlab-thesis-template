@@ -87,12 +87,3 @@ VS Code で書き，困ったときは Claude に聞く．
 - 修正を提案し，了承すればファイルに反映する．`tools/check.py` も実行する．
 
 本文は自分で書くという役割分担は，Claude Code でも同じである．
-
-## 補足：git で管理したい人へ
-
-ダウンロードの代わりにクローンしてもよい．研究室のリポジトリには push できない．
-自分のリポジトリで管理するときは，必ず非公開（private）にする．
-
-```
-git clone https://github.com/kazumichiINOUE/irlab-thesis-template.git saitama
-```
